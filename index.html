@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Durian Fertilizer Cost-Benefit Analysis Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        .table-row:hover {
+            background-color: #f8fafc;
+        }
+        .filter-chip {
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-chip:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f4;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold flex items-center">
+                        <i class="fas fa-seedling mr-3"></i>
+                        Durian Fertilizer Analysis Tool
+                    </h1>
+                    <p class="text-blue-100 mt-2">Compare fertilizer costs and benefits for your durian farm</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-blue-100">Malaysia & Thailand</div>
+                    <div class="text-lg font-semibold">Cost-Benefit Calculator</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Filters Section -->
+        <div class="bg-white rounded-lg card-shadow p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-filter mr-3 text-blue-600"></i>
+                Filters & Settings
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Country Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                    <select id="countryFilter" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Countries</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="Thailand">Thailand</option>
+                    </select>
+                </div>
+
+                <!-- Brand Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                    <select id="brandFilter" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Brands</option>
+                    </select>
+                </div>
+
+                <!-- Organic/Chemical Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                    <select id="typeFilter" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Types</option>
+                        <option value="Organic">Organic</option>
+                        <option value="Chemical">Chemical</option>
+                        <option value="Bio-chemical">Bio-chemical</option>
+                    </select>
+                </div>
+
+                <!-- Growth Stage Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Growth Stage</label>
+                    <select id="stageFilter" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Stages</option>
+                        <option value="Nursery">Nursery Stage</option>
+                        <option value="Vegetative">Vegetative Stage</option>
+                        <option value="Flowering">Flowering Stage</option>
+                        <option value="Fruiting">Fruiting Stage</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Search by name, nutrient, or vendor..." 
+                           class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Settings Section -->
+        <div class="bg-white rounded-lg card-shadow p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-calculator mr-3 text-green-600"></i>
+                Farm Settings
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Number of Trees -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Number of Durian Trees</label>
+                    <input type="number" id="numTrees" value="10" min="1" max="10000" 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                </div>
+
+                <!-- Duration -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Program Duration</label>
+                    <select id="duration" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="1">1 Month</option>
+                        <option value="6" selected>6 Months</option>
+                        <option value="12">1 Year</option>
+                        <option value="custom">Custom Days</option>
+                    </select>
+                </div>
+
+                <!-- Custom Days (hidden by default) -->
+                <div id="customDaysDiv" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Custom Days</label>
+                    <input type="number" id="customDays" value="30" min="1" max="3650" 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                </div>
+
+                <!-- Application Frequency -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Application Frequency</label>
+                    <select id="frequency" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="monthly">Once per month</option>
+                        <option value="biweekly">Biweekly (every 2 weeks)</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="quarterly">Quarterly (every 3 months)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg card-shadow p-6 hover-scale">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Total Products</p>
+                        <p class="text-2xl font-bold text-gray-900" id="totalProducts">0</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-boxes text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg card-shadow p-6 hover-scale">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Average Cost per Tree</p>
+                        <p class="text-2xl font-bold text-green-600" id="avgCostPerTree">RM 0</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-tree text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg card-shadow p-6 hover-scale">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Lowest Cost Option</p>
+                        <p class="text-2xl font-bold text-purple-600" id="lowestCost">RM 0</p>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-dollar-sign text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="bg-white rounded-lg card-shadow overflow-hidden mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-table mr-3 text-indigo-600"></i>
+                        Fertilizer Comparison Results
+                    </h2>
+                    <div class="flex space-x-3">
+                        <button id="sortByCost" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            <i class="fas fa-sort-amount-down mr-2"></i>Sort by Cost
+                        </button>
+                        <button id="exportCSV" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NPK</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity Needed</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Cost</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost per Tree</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Cost Comparison Chart -->
+            <div class="bg-white rounded-lg card-shadow p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-chart-bar mr-3 text-orange-600"></i>
+                    Cost Comparison (Top 10)
+                </h3>
+                <canvas id="costChart" width="400" height="300"></canvas>
+            </div>
+
+            <!-- Type Distribution Chart -->
+            <div class="bg-white rounded-lg card-shadow p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-chart-pie mr-3 text-pink-600"></i>
+                    Fertilizer Type Distribution
+                </h3>
+                <canvas id="typeChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Add Custom Fertilizer Section -->
+        <div class="bg-white rounded-lg card-shadow p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-plus-circle mr-3 text-teal-600"></i>
+                Add Custom Fertilizer
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <input type="text" id="customName" placeholder="Product Name" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="customBrand" placeholder="Brand" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                <select id="customCountry" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                    <option value="">Select Country</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="Thailand">Thailand</option>
+                </select>
+                <select id="customType" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                    <option value="">Select Type</option>
+                    <option value="Organic">Organic</option>
+                    <option value="Chemical">Chemical</option>
+                    <option value="Bio-chemical">Bio-chemical</option>
+                </select>
+                <input type="text" id="customNPK" placeholder="NPK (e.g., N:15, P:10, K:20)" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                <select id="customStage" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                    <option value="">Select Stage</option>
+                    <option value="Nursery Stage">Nursery Stage</option>
+                    <option value="Vegetative Stage">Vegetative Stage</option>
+                    <option value="Flowering Stage">Flowering Stage</option>
+                    <option value="Fruiting Stage">Fruiting Stage</option>
+                    <option value="General">General</option>
+                </select>
+                <input type="text" id="customUsage" placeholder="Usage (e.g., 2kg/tree/month)" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                <input type="text" id="customPackage" placeholder="Package Size (e.g., 25KG)" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                <input type="number" id="customPrice" placeholder="Price per kg (RM)" step="0.01" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+            </div>
+            
+            <button id="addCustomFertilizer" class="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+                <i class="fas fa-plus mr-2"></i>Add Custom Fertilizer
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-300">© 2025 Durian Fertilizer Analysis Tool. Research data from Malaysia & Thailand markets.</p>
+            <p class="text-gray-400 text-sm mt-2">Prices and availability may vary. Please verify with suppliers before making purchases.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fertilizer data will be loaded here
+        let fertilizerData = [];
+        let filteredData = [];
+        let costChart = null;
+        let typeChart = null;
+
+        // Load fertilizer data
+        async function loadFertilizerData() {
+            try {
+                const response = await fetch('durian_fertilizers.json');
+                fertilizerData = await response.json();
+                populateFilters();
+                updateResults();
+            } catch (error) {
+                console.error('Error loading fertilizer data:', error);
+                // Fallback data will be added in the next phase
+            }
+        }
+
+        // Populate filter dropdowns
+        function populateFilters() {
+            const brandFilter = document.getElementById('brandFilter');
+            const brands = [...new Set(fertilizerData.map(item => item['Brand / Manufacturer']))];
+            
+            brandFilter.innerHTML = '<option value="">All Brands</option>';
+            brands.forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                brandFilter.appendChild(option);
+            });
+        }
+
+        // Calculate quantity needed based on usage and settings
+        function calculateQuantityNeeded(usage, numTrees, duration, frequency) {
+            // Parse usage string to extract numeric value and unit
+            let usagePerTreePerMonth = 0;
+            
+            if (usage.includes('kg')) {
+                const match = usage.match(/(\d+(?:\.\d+)?)/);
+                if (match) {
+                    usagePerTreePerMonth = parseFloat(match[1]);
+                    if (usage.includes('year')) {
+                        usagePerTreePerMonth = usagePerTreePerMonth / 12; // Convert yearly to monthly
+                    }
+                }
+            } else if (usage.includes('gm') || usage.includes('g')) {
+                const match = usage.match(/(\d+(?:\.\d+)?)/);
+                if (match) {
+                    usagePerTreePerMonth = parseFloat(match[1]) / 1000; // Convert grams to kg
+                }
+            }
+            
+            // Default usage if not specified
+            if (usagePerTreePerMonth === 0) {
+                usagePerTreePerMonth = 2; // Default 2kg per tree per month
+            }
+            
+            // Calculate frequency multiplier
+            let frequencyMultiplier = 1;
+            switch (frequency) {
+                case 'weekly': frequencyMultiplier = 4.33; break;
+                case 'biweekly': frequencyMultiplier = 2.17; break;
+                case 'monthly': frequencyMultiplier = 1; break;
+                case 'quarterly': frequencyMultiplier = 0.33; break;
+            }
+            
+            // Calculate total months
+            let totalMonths = parseFloat(duration);
+            if (duration === 'custom') {
+                const customDays = parseFloat(document.getElementById('customDays').value) || 30;
+                totalMonths = customDays / 30;
+            }
+            
+            return usagePerTreePerMonth * numTrees * totalMonths * frequencyMultiplier;
+        }
+
+        // Extract price per kg from price string
+        function extractPricePerKg(priceString) {
+            if (!priceString || priceString.includes('Not specified') || priceString.includes('contact')) {
+                return 0;
+            }
+            
+            const match = priceString.match(/RM\s*(\d+(?:\.\d+)?)/);
+            if (match) {
+                const price = parseFloat(match[1]);
+                if (priceString.includes('/kg')) {
+                    return price;
+                } else {
+                    // Try to extract package size and calculate price per kg
+                    const kgMatch = priceString.match(/(\d+)kg/i) || priceString.match(/(\d+)KG/);
+                    if (kgMatch) {
+                        const packageSize = parseFloat(kgMatch[1]);
+                        return price / packageSize;
+                    }
+                }
+            }
+            
+            return 0;
+        }
+
+        // Filter and update results
+        function updateResults() {
+            const countryFilter = document.getElementById('countryFilter').value;
+            const brandFilter = document.getElementById('brandFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const stageFilter = document.getElementById('stageFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredData = fertilizerData.filter(item => {
+                const matchesCountry = !countryFilter || item['Country of Origin'] === countryFilter;
+                const matchesBrand = !brandFilter || item['Brand / Manufacturer'] === brandFilter;
+                const matchesType = !typeFilter || item['Organic or Chemical'].includes(typeFilter);
+                const matchesStage = !stageFilter || item['Application stage'].includes(stageFilter);
+                const matchesSearch = !searchInput || 
+                    item['Product Name'].toLowerCase().includes(searchInput) ||
+                    item['NPK value and key nutrients'].toLowerCase().includes(searchInput) ||
+                    item['Where to buy'].toLowerCase().includes(searchInput);
+                
+                return matchesCountry && matchesBrand && matchesType && matchesStage && matchesSearch;
+            });
+            
+            updateTable();
+            updateSummaryCards();
+            updateCharts();
+        }
+
+        // Update results table
+        function updateTable() {
+            const tbody = document.getElementById('resultsTableBody');
+            const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
+            const duration = document.getElementById('duration').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            tbody.innerHTML = '';
+            
+            filteredData.forEach(item => {
+                const quantityNeeded = calculateQuantityNeeded(item['Recommended usage'], numTrees, duration, frequency);
+                const pricePerKg = extractPricePerKg(item['Price per unit and price per kg']);
+                const totalCost = quantityNeeded * pricePerKg;
+                const costPerTree = totalCost / numTrees;
+                
+                const row = document.createElement('tr');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${item['Product Name']}</div>
+                        <div class="text-sm text-gray-500">${item['Country of Origin']}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item['Brand / Manufacturer']}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item['NPK value and key nutrients']}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            ${item['Application stage'].split('(')[0].trim()}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${pricePerKg > 0 ? `RM ${pricePerKg.toFixed(2)}/kg` : 'Contact supplier'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${quantityNeeded.toFixed(1)} kg</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                        ${totalCost > 0 ? `RM ${totalCost.toFixed(2)}` : 'N/A'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${costPerTree > 0 ? `RM ${costPerTree.toFixed(2)}` : 'N/A'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item['Where to buy']}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update summary cards
+        function updateSummaryCards() {
+            const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
+            const duration = document.getElementById('duration').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            document.getElementById('totalProducts').textContent = filteredData.length;
+            
+            const costsPerTree = filteredData.map(item => {
+                const quantityNeeded = calculateQuantityNeeded(item['Recommended usage'], numTrees, duration, frequency);
+                const pricePerKg = extractPricePerKg(item['Price per unit and price per kg']);
+                return (quantityNeeded * pricePerKg) / numTrees;
+            }).filter(cost => cost > 0);
+            
+            if (costsPerTree.length > 0) {
+                const avgCost = costsPerTree.reduce((sum, cost) => sum + cost, 0) / costsPerTree.length;
+                const minCost = Math.min(...costsPerTree);
+                
+                document.getElementById('avgCostPerTree').textContent = `RM ${avgCost.toFixed(2)}`;
+                document.getElementById('lowestCost').textContent = `RM ${minCost.toFixed(2)}`;
+            } else {
+                document.getElementById('avgCostPerTree').textContent = 'RM 0';
+                document.getElementById('lowestCost').textContent = 'RM 0';
+            }
+        }
+
+        // Update charts
+        function updateCharts() {
+            updateCostChart();
+            updateTypeChart();
+        }
+
+        // Update cost comparison chart
+        function updateCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
+            const duration = document.getElementById('duration').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            const chartData = filteredData.map(item => {
+                const quantityNeeded = calculateQuantityNeeded(item['Recommended usage'], numTrees, duration, frequency);
+                const pricePerKg = extractPricePerKg(item['Price per unit and price per kg']);
+                const totalCost = quantityNeeded * pricePerKg;
+                return {
+                    name: item['Product Name'],
+                    cost: totalCost
+                };
+            }).filter(item => item.cost > 0)
+              .sort((a, b) => a.cost - b.cost)
+              .slice(0, 10);
+            
+            if (costChart) {
+                costChart.destroy();
+            }
+            
+            costChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.map(item => item.name),
+                    datasets: [{
+                        label: 'Total Cost (RM)',
+                        data: chartData.map(item => item.cost),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'RM ' + value.toFixed(0);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update type distribution chart
+        function updateTypeChart() {
+            const ctx = document.getElementById('typeChart').getContext('2d');
+            
+            const typeCounts = {};
+            filteredData.forEach(item => {
+                const type = item['Organic or Chemical'].split('(')[0].trim();
+                typeCounts[type] = (typeCounts[type] || 0) + 1;
+            });
+            
+            if (typeChart) {
+                typeChart.destroy();
+            }
+            
+            typeChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(typeCounts),
+                    datasets: [{
+                        data: Object.values(typeCounts),
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(168, 85, 247, 0.8)',
+                            'rgba(59, 130, 246, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(168, 85, 247, 1)',
+                            'rgba(59, 130, 246, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Sort by cost
+        function sortByCost() {
+            const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
+            const duration = document.getElementById('duration').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            filteredData.sort((a, b) => {
+                const costA = calculateQuantityNeeded(a['Recommended usage'], numTrees, duration, frequency) * extractPricePerKg(a['Price per unit and price per kg']);
+                const costB = calculateQuantityNeeded(b['Recommended usage'], numTrees, duration, frequency) * extractPricePerKg(b['Price per unit and price per kg']);
+                return costA - costB;
+            });
+            
+            updateTable();
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
+            const duration = document.getElementById('duration').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            let csv = 'Product Name,Brand,Country,Type,NPK,Stage,Unit Price (RM/kg),Quantity Needed (kg),Total Cost (RM),Cost per Tree (RM),Source\n';
+            
+            filteredData.forEach(item => {
+                const quantityNeeded = calculateQuantityNeeded(item['Recommended usage'], numTrees, duration, frequency);
+                const pricePerKg = extractPricePerKg(item['Price per unit and price per kg']);
+                const totalCost = quantityNeeded * pricePerKg;
+                const costPerTree = totalCost / numTrees;
+                
+                csv += `"${item['Product Name']}","${item['Brand / Manufacturer']}","${item['Country of Origin']}","${item['Organic or Chemical']}","${item['NPK value and key nutrients']}","${item['Application stage']}",${pricePerKg.toFixed(2)},${quantityNeeded.toFixed(1)},${totalCost.toFixed(2)},${costPerTree.toFixed(2)},"${item['Where to buy']}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'durian_fertilizer_analysis.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Add custom fertilizer
+        function addCustomFertilizer() {
+            const name = document.getElementById('customName').value;
+            const brand = document.getElementById('customBrand').value;
+            const country = document.getElementById('customCountry').value;
+            const type = document.getElementById('customType').value;
+            const npk = document.getElementById('customNPK').value;
+            const stage = document.getElementById('customStage').value;
+            const usage = document.getElementById('customUsage').value;
+            const packageSize = document.getElementById('customPackage').value;
+            const price = document.getElementById('customPrice').value;
+            
+            if (!name || !brand || !country || !type || !price) {
+                alert('Please fill in all required fields (Name, Brand, Country, Type, Price)');
+                return;
+            }
+            
+            const customFertilizer = {
+                'Product Name': name,
+                'Brand / Manufacturer': brand,
+                'Country of Origin': country,
+                'Organic or Chemical': type,
+                'NPK value and key nutrients': npk || 'Not specified',
+                'Application stage': stage || 'General',
+                'Recommended usage': usage || '2kg/tree/month',
+                'Package size': packageSize || '25KG',
+                'SKU / Product Code': 'Custom',
+                'Price per unit and price per kg': `RM${price}/kg`,
+                'Where to buy': 'Custom entry',
+                'Ratings / Reviews if available': 'Custom entry'
+            };
+            
+            fertilizerData.push(customFertilizer);
+            populateFilters();
+            updateResults();
+            
+            // Clear form
+            document.getElementById('customName').value = '';
+            document.getElementById('customBrand').value = '';
+            document.getElementById('customCountry').value = '';
+            document.getElementById('customType').value = '';
+            document.getElementById('customNPK').value = '';
+            document.getElementById('customStage').value = '';
+            document.getElementById('customUsage').value = '';
+            document.getElementById('customPackage').value = '';
+            document.getElementById('customPrice').value = '';
+            
+            alert('Custom fertilizer added successfully!');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFertilizerData();
+            
+            // Filter event listeners
+            document.getElementById('countryFilter').addEventListener('change', updateResults);
+            document.getElementById('brandFilter').addEventListener('change', updateResults);
+            document.getElementById('typeFilter').addEventListener('change', updateResults);
+            document.getElementById('stageFilter').addEventListener('change', updateResults);
+            document.getElementById('searchInput').addEventListener('input', updateResults);
+            
+            // Settings event listeners
+            document.getElementById('numTrees').addEventListener('input', updateResults);
+            document.getElementById('duration').addEventListener('change', function() {
+                const customDaysDiv = document.getElementById('customDaysDiv');
+                if (this.value === 'custom') {
+                    customDaysDiv.classList.remove('hidden');
+                } else {
+                    customDaysDiv.classList.add('hidden');
+                }
+                updateResults();
+            });
+            document.getElementById('customDays').addEventListener('input', updateResults);
+            document.getElementById('frequency').addEventListener('change', updateResults);
+            
+            // Button event listeners
+            document.getElementById('sortByCost').addEventListener('click', sortByCost);
+            document.getElementById('exportCSV').addEventListener('click', exportToCSV);
+            document.getElementById('addCustomFertilizer').addEventListener('click', addCustomFertilizer);
+        });
+    </script>
+</body>
+</html>
+
