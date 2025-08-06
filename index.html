@@ -4,44 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Durian Fertilizer Cost-Benefit Analysis Tool</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card-shadow {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .hover-scale {
-            transition: transform 0.2s ease-in-out;
-        }
-        .hover-scale:hover {
-            transform: scale(1.02);
-        }
-        .table-row:hover {
-            background-color: #f8fafc;
-        }
-        .filter-chip {
-            transition: all 0.2s ease-in-out;
-        }
-        .filter-chip:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .loading-spinner {
-            border: 3px solid #f3f3f4;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* Production-ready CSS with essential Tailwind utilities */
+        *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::before,::after{--tw-content:''}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal}body{margin:0;line-height:inherit;background-color:rgb(249 250 251 );min-height:100vh}.container{width:100%;margin-right:auto;margin-left:auto;padding-right:1rem;padding-left:1rem}@media (min-width:640px){.container{max-width:640px}}@media (min-width:768px){.container{max-width:768px}}@media (min-width:1024px){.container{max-width:1024px}}@media (min-width:1280px){.container{max-width:1280px}}.flex{display:flex}.grid{display:grid}.hidden{display:none}.items-center{align-items:center}.justify-between{justify-content:space-between}.space-x-3>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-right:calc(.75rem*var(--tw-space-x-reverse));margin-left:calc(.75rem*calc(1 - var(--tw-space-x-reverse)))}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}@media (min-width:768px){.md\\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.lg\\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-2{margin-right:.5rem}.mr-3{margin-right:.75rem}.mt-2{margin-top:.5rem}.mt-6{margin-top:1.5rem}.p-3{padding:.75rem}.p-6{padding:1.5rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pl-10{padding-left:2.5rem}.w-full{width:100%}.min-h-screen{min-height:100vh}.bg-white{background-color:rgb(255 255 255)}.bg-gray-50{background-color:rgb(249 250 251)}.bg-gray-800{background-color:rgb(31 41 55)}.bg-blue-100{background-color:rgb(219 234 254)}.bg-blue-600{background-color:rgb(37 99 235)}.bg-green-100{background-color:rgb(220 252 231)}.bg-green-600{background-color:rgb(22 163 74)}.bg-green-700{background-color:rgb(21 128 61)}.bg-purple-100{background-color:rgb(243 232 255)}.bg-indigo-600{background-color:rgb(79 70 229)}.bg-indigo-700{background-color:rgb(67 56 202)}.bg-teal-600{background-color:rgb(13 148 136)}.bg-teal-700{background-color:rgb(15 118 110)}.gradient-bg{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}.text-white{color:rgb(255 255 255)}.text-gray-300{color:rgb(209 213 219)}.text-gray-400{color:rgb(156 163 175)}.text-gray-500{color:rgb(107 114 128)}.text-gray-700{color:rgb(55 65 81)}.text-gray-800{color:rgb(31 41 55)}.text-gray-900{color:rgb(17 24 39)}.text-blue-100{color:rgb(219 234 254)}.text-blue-600{color:rgb(37 99 235)}.text-blue-800{color:rgb(30 64 175)}.text-green-600{color:rgb(22 163 74)}.text-purple-600{color:rgb(147 51 234)}.text-indigo-600{color:rgb(79 70 229)}.text-orange-600{color:rgb(234 88 12)}.text-pink-600{color:rgb(219 39 119)}.text-teal-600{color:rgb(13 148 136)}.text-xs{font-size:.75rem;line-height:1rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.uppercase{text-transform:uppercase}.leading-5{line-height:1.25rem}.tracking-wider{letter-spacing:.05em}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-gray-200{border-color:rgb(229 231 235)}.border-gray-300{border-color:rgb(209 213 219)}.divide-y>:not([hidden])~:not([hidden]){border-top-width:1px;border-color:rgb(229 231 235)}.divide-gray-200>:not([hidden])~:not([hidden]){border-color:rgb(229 231 235)}.rounded{border-radius:.25rem}.rounded-lg{border-radius:.5rem}.rounded-full{border-radius:9999px}.shadow-lg{box-shadow:0 10px 15px -3px rgb(0 0 0/.1),0 4px 6px -4px rgb(0 0 0/.1)}.card-shadow{box-shadow:0 10px 25px rgba(0,0,0,.1)}.focus\\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\\:ring-blue-500:focus{--tw-ring-color:rgb(59 130 246)}.focus\\:ring-green-500:focus{--tw-ring-color:rgb(34 197 94)}.focus\\:ring-teal-500:focus{--tw-ring-color:rgb(20 184 166)}.focus\\:border-blue-500:focus{border-color:rgb(59 130 246)}.focus\\:border-green-500:focus{border-color:rgb(34 197 94)}.focus\\:border-teal-500:focus{border-color:rgb(20 184 166)}.hover\\:bg-blue-700:hover{background-color:rgb(29 78 216)}.hover\\:bg-green-700:hover{background-color:rgb(21 128 61)}.hover\\:bg-indigo-700:hover{background-color:rgb(67 56 202)}.hover\\:bg-teal-700:hover{background-color:rgb(15 118 110)}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:150ms}.relative{position:relative}.absolute{position:absolute}.left-3{left:.75rem}.top-3\\.5{top:.875rem}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.whitespace-nowrap{white-space:nowrap}table{text-indent:0;border-color:inherit;border-collapse:collapse}input,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}.hover-scale{transition:transform .2s ease-in-out}.hover-scale:hover{transform:scale(1.02)}.table-row:hover{background-color:#f8fafc}.filter-chip{transition:all .2s ease-in-out}.filter-chip:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}.loading-spinner{border:3px solid #f3f3f4;border-top:3px solid #667eea;border-radius:50%;width:20px;height:20px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.chart-container{position:relative;height:300px!important;max-height:300px!important;width:100%;overflow:hidden}.chart-container canvas{max-height:300px!important;height:300px!important;width:100%!important}#costChart,#typeChart{max-height:300px!important;height:300px!important}
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -262,7 +229,9 @@
                     <i class="fas fa-chart-bar mr-3 text-orange-600"></i>
                     Cost Comparison (Top 10)
                 </h3>
-                <canvas id="costChart" width="400" height="300"></canvas>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
             </div>
 
             <!-- Type Distribution Chart -->
@@ -271,7 +240,9 @@
                     <i class="fas fa-chart-pie mr-3 text-pink-600"></i>
                     Fertilizer Type Distribution
                 </h3>
-                <canvas id="typeChart" width="400" height="300"></canvas>
+                <div class="chart-container">
+                    <canvas id="typeChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -325,13 +296,12 @@
     </footer>
 
     <script>
-        // Fertilizer data will be loaded here
         let fertilizerData = [];
         let filteredData = [];
         let costChart = null;
         let typeChart = null;
+        let isUpdating = false;
 
-        // Load fertilizer data
         async function loadFertilizerData() {
             try {
                 const response = await fetch('durian_fertilizers.json');
@@ -340,11 +310,9 @@
                 updateResults();
             } catch (error) {
                 console.error('Error loading fertilizer data:', error);
-                // Fallback data will be added in the next phase
             }
         }
 
-        // Populate filter dropdowns
         function populateFilters() {
             const brandFilter = document.getElementById('brandFilter');
             const brands = [...new Set(fertilizerData.map(item => item['Brand / Manufacturer']))];
@@ -358,9 +326,7 @@
             });
         }
 
-        // Calculate quantity needed based on usage and settings
         function calculateQuantityNeeded(usage, numTrees, duration, frequency) {
-            // Parse usage string to extract numeric value and unit
             let usagePerTreePerMonth = 0;
             
             if (usage.includes('kg')) {
@@ -368,22 +334,20 @@
                 if (match) {
                     usagePerTreePerMonth = parseFloat(match[1]);
                     if (usage.includes('year')) {
-                        usagePerTreePerMonth = usagePerTreePerMonth / 12; // Convert yearly to monthly
+                        usagePerTreePerMonth = usagePerTreePerMonth / 12;
                     }
                 }
             } else if (usage.includes('gm') || usage.includes('g')) {
                 const match = usage.match(/(\d+(?:\.\d+)?)/);
                 if (match) {
-                    usagePerTreePerMonth = parseFloat(match[1]) / 1000; // Convert grams to kg
+                    usagePerTreePerMonth = parseFloat(match[1]) / 1000;
                 }
             }
             
-            // Default usage if not specified
             if (usagePerTreePerMonth === 0) {
-                usagePerTreePerMonth = 2; // Default 2kg per tree per month
+                usagePerTreePerMonth = 2;
             }
             
-            // Calculate frequency multiplier
             let frequencyMultiplier = 1;
             switch (frequency) {
                 case 'weekly': frequencyMultiplier = 4.33; break;
@@ -392,7 +356,6 @@
                 case 'quarterly': frequencyMultiplier = 0.33; break;
             }
             
-            // Calculate total months
             let totalMonths = parseFloat(duration);
             if (duration === 'custom') {
                 const customDays = parseFloat(document.getElementById('customDays').value) || 30;
@@ -402,7 +365,6 @@
             return usagePerTreePerMonth * numTrees * totalMonths * frequencyMultiplier;
         }
 
-        // Extract price per kg from price string
         function extractPricePerKg(priceString) {
             if (!priceString || priceString.includes('Not specified') || priceString.includes('contact')) {
                 return 0;
@@ -414,7 +376,6 @@
                 if (priceString.includes('/kg')) {
                     return price;
                 } else {
-                    // Try to extract package size and calculate price per kg
                     const kgMatch = priceString.match(/(\d+)kg/i) || priceString.match(/(\d+)KG/);
                     if (kgMatch) {
                         const packageSize = parseFloat(kgMatch[1]);
@@ -426,33 +387,37 @@
             return 0;
         }
 
-        // Filter and update results
         function updateResults() {
-            const countryFilter = document.getElementById('countryFilter').value;
-            const brandFilter = document.getElementById('brandFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
-            const stageFilter = document.getElementById('stageFilter').value;
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            if (isUpdating) return;
+            isUpdating = true;
             
-            filteredData = fertilizerData.filter(item => {
-                const matchesCountry = !countryFilter || item['Country of Origin'] === countryFilter;
-                const matchesBrand = !brandFilter || item['Brand / Manufacturer'] === brandFilter;
-                const matchesType = !typeFilter || item['Organic or Chemical'].includes(typeFilter);
-                const matchesStage = !stageFilter || item['Application stage'].includes(stageFilter);
-                const matchesSearch = !searchInput || 
-                    item['Product Name'].toLowerCase().includes(searchInput) ||
-                    item['NPK value and key nutrients'].toLowerCase().includes(searchInput) ||
-                    item['Where to buy'].toLowerCase().includes(searchInput);
+            setTimeout(() => {
+                const countryFilter = document.getElementById('countryFilter').value;
+                const brandFilter = document.getElementById('brandFilter').value;
+                const typeFilter = document.getElementById('typeFilter').value;
+                const stageFilter = document.getElementById('stageFilter').value;
+                const searchInput = document.getElementById('searchInput').value.toLowerCase();
                 
-                return matchesCountry && matchesBrand && matchesType && matchesStage && matchesSearch;
-            });
-            
-            updateTable();
-            updateSummaryCards();
-            updateCharts();
+                filteredData = fertilizerData.filter(item => {
+                    const matchesCountry = !countryFilter || item['Country of Origin'] === countryFilter;
+                    const matchesBrand = !brandFilter || item['Brand / Manufacturer'] === brandFilter;
+                    const matchesType = !typeFilter || item['Organic or Chemical'].includes(typeFilter);
+                    const matchesStage = !stageFilter || item['Application stage'].includes(stageFilter);
+                    const matchesSearch = !searchInput || 
+                        item['Product Name'].toLowerCase().includes(searchInput) ||
+                        item['NPK value and key nutrients'].toLowerCase().includes(searchInput) ||
+                        item['Where to buy'].toLowerCase().includes(searchInput);
+                    
+                    return matchesCountry && matchesBrand && matchesType && matchesStage && matchesSearch;
+                });
+                
+                updateTable();
+                updateSummaryCards();
+                updateCharts();
+                isUpdating = false;
+            }, 100);
         }
 
-        // Update results table
         function updateTable() {
             const tbody = document.getElementById('resultsTableBody');
             const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
@@ -497,7 +462,6 @@
             });
         }
 
-        // Update summary cards
         function updateSummaryCards() {
             const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
             const duration = document.getElementById('duration').value;
@@ -523,13 +487,11 @@
             }
         }
 
-        // Update charts
         function updateCharts() {
             updateCostChart();
             updateTypeChart();
         }
 
-        // Update cost comparison chart
         function updateCostChart() {
             const ctx = document.getElementById('costChart').getContext('2d');
             const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
@@ -550,6 +512,7 @@
             
             if (costChart) {
                 costChart.destroy();
+                costChart = null;
             }
             
             costChart = new Chart(ctx, {
@@ -586,7 +549,6 @@
             });
         }
 
-        // Update type distribution chart
         function updateTypeChart() {
             const ctx = document.getElementById('typeChart').getContext('2d');
             
@@ -598,6 +560,7 @@
             
             if (typeChart) {
                 typeChart.destroy();
+                typeChart = null;
             }
             
             typeChart = new Chart(ctx, {
@@ -633,7 +596,6 @@
             });
         }
 
-        // Sort by cost
         function sortByCost() {
             const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
             const duration = document.getElementById('duration').value;
@@ -648,7 +610,6 @@
             updateTable();
         }
 
-        // Export to CSV
         function exportToCSV() {
             const numTrees = parseInt(document.getElementById('numTrees').value) || 1;
             const duration = document.getElementById('duration').value;
@@ -674,7 +635,6 @@
             window.URL.revokeObjectURL(url);
         }
 
-        // Add custom fertilizer
         function addCustomFertilizer() {
             const name = document.getElementById('customName').value;
             const brand = document.getElementById('customBrand').value;
@@ -710,7 +670,6 @@
             populateFilters();
             updateResults();
             
-            // Clear form
             document.getElementById('customName').value = '';
             document.getElementById('customBrand').value = '';
             document.getElementById('customCountry').value = '';
@@ -724,19 +683,22 @@
             alert('Custom fertilizer added successfully!');
         }
 
-        // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             loadFertilizerData();
             
-            // Filter event listeners
-            document.getElementById('countryFilter').addEventListener('change', updateResults);
-            document.getElementById('brandFilter').addEventListener('change', updateResults);
-            document.getElementById('typeFilter').addEventListener('change', updateResults);
-            document.getElementById('stageFilter').addEventListener('change', updateResults);
-            document.getElementById('searchInput').addEventListener('input', updateResults);
+            let filterTimeout;
+            function debounceFilter() {
+                clearTimeout(filterTimeout);
+                filterTimeout = setTimeout(updateResults, 300);
+            }
             
-            // Settings event listeners
-            document.getElementById('numTrees').addEventListener('input', updateResults);
+            document.getElementById('countryFilter').addEventListener('change', debounceFilter);
+            document.getElementById('brandFilter').addEventListener('change', debounceFilter);
+            document.getElementById('typeFilter').addEventListener('change', debounceFilter);
+            document.getElementById('stageFilter').addEventListener('change', debounceFilter);
+            document.getElementById('searchInput').addEventListener('input', debounceFilter);
+            
+            document.getElementById('numTrees').addEventListener('input', debounceFilter);
             document.getElementById('duration').addEventListener('change', function() {
                 const customDaysDiv = document.getElementById('customDaysDiv');
                 if (this.value === 'custom') {
@@ -744,17 +706,24 @@
                 } else {
                     customDaysDiv.classList.add('hidden');
                 }
-                updateResults();
+                debounceFilter();
             });
-            document.getElementById('customDays').addEventListener('input', updateResults);
-            document.getElementById('frequency').addEventListener('change', updateResults);
+            document.getElementById('customDays').addEventListener('input', debounceFilter);
+            document.getElementById('frequency').addEventListener('change', debounceFilter);
             
-            // Button event listeners
             document.getElementById('sortByCost').addEventListener('click', sortByCost);
             document.getElementById('exportCSV').addEventListener('click', exportToCSV);
             document.getElementById('addCustomFertilizer').addEventListener('click', addCustomFertilizer);
         });
+
+        window.addEventListener('beforeunload', function() {
+            if (costChart) {
+                costChart.destroy();
+            }
+            if (typeChart) {
+                typeChart.destroy();
+            }
+        });
     </script>
 </body>
 </html>
-
